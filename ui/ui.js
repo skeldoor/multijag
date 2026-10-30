@@ -129,6 +129,7 @@ function makeSortable(node, handle, kind, id, acctId) {
 
 function render(state) {
   current = state;
+  $('#version').textContent = `v${state.version}`;
   $('#client').value = state.settings.client;
   $('#path-runelite').textContent = state.settings.paths.runelite || '(not set)';
   $('#path-official').textContent = state.settings.paths.official || '(not set)';
@@ -246,4 +247,5 @@ $('#check-update').addEventListener('click', (e) => {
   e.currentTarget.disabled = true;
   checkForUpdate(true).finally(() => { e.currentTarget.disabled = false; });
 });
+$('#feedback').addEventListener('click', () => run('', () => api.openRelease('https://github.com/Skeldoor/multijag/issues')));
 checkForUpdate(false);

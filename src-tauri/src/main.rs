@@ -56,6 +56,7 @@ struct AccountView {
 // What the UI sees: never tokens.
 #[derive(Serialize, Clone)]
 struct View {
+    version: &'static str,
     settings: Settings,
     accounts: Vec<AccountView>,
     running: Vec<RunningView>,
@@ -64,6 +65,7 @@ struct View {
 fn view(st: &AppState) -> View {
     let store = st.store.lock().unwrap();
     View {
+        version: env!("CARGO_PKG_VERSION"),
         settings: store.settings.clone(),
         accounts: store
             .accounts

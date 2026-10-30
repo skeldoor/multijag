@@ -204,10 +204,10 @@ function render(state) {
       hideBtn.addEventListener('click', () => run('', () => api.setHidden(a.id, c.accountId, !c.hidden), hideBtn));
       const row = el('div', { class: c.hidden ? 'char is-hidden' : 'char' },
           rowGrip,
+          hideBtn,
           el('span', { class: 'char-name' }, c.displayName || el('span', { class: 'muted' }, '(no name set)')),
           el('span', { class: m.member ? 'member' : 'muted small' }, m.text),
           n ? el('span', { class: 'badge' }, `● running${n > 1 ? ` ×${n}` : ''}`) : '',
-          hideBtn,
           launchBtn,
       );
       makeSortable(row, rowGrip, 'char', c.accountId, a.id);

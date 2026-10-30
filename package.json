@@ -1,0 +1,13 @@
+{
+  "name": "multijag",
+  "version": "0.1.0",
+  "private": true,
+  "description": "OSRS launcher that keeps multiple Jagex accounts signed in at once",
+  "scripts": {
+    "dev": "tauri dev",
+    "build": "tauri build"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "^2"
+  }
+}

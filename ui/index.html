@@ -1,0 +1,82 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>MultiJag</title>
+<style>
+  :root { --bg:#1b1712; --panel:#2a241c; --line:#4a3f30; --text:#eadfc8; --muted:#a8997d; --gold:#e0b04c; --red:#d0614f; --green:#7cbf6a; }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--text); font:14px/1.4 "Segoe UI", system-ui, sans-serif; }
+  header { display:flex; align-items:center; gap:12px; padding:14px 18px; border-bottom:1px solid var(--line); }
+  h1 { font-size:18px; margin:0; color:var(--gold); flex:1; }
+  main { padding:14px 18px; }
+  button { background:var(--panel); color:var(--text); border:1px solid var(--line); border-radius:6px; padding:6px 12px; font:inherit; cursor:pointer; }
+  button:hover:not(:disabled) { border-color:var(--gold); }
+  button:disabled { opacity:.5; cursor:default; }
+  button.primary { background:var(--gold); color:#1b1712; border-color:var(--gold); font-weight:600; }
+  button.danger:hover { border-color:var(--red); color:var(--red); }
+  .acct { background:var(--panel); border:1px solid var(--line); border-radius:8px; margin-bottom:12px; }
+  .acct-head { display:flex; align-items:center; gap:8px; padding:10px 12px; border-bottom:1px solid var(--line); cursor:pointer; user-select:none; }
+  .acct-head:hover .acct-name, .acct-head:focus-visible .acct-name { color:var(--gold); }
+  .acct-head:focus-visible { outline:1px solid var(--gold); outline-offset:-1px; border-radius:8px; }
+  .chevron { color:var(--muted); width:12px; transition:transform .15s; }
+  .count { font-size:12px; }
+  .acct.collapsed .chevron { transform:rotate(-90deg); }
+  .acct.collapsed .acct-head { border-bottom-color:transparent; }
+  .acct.collapsed .acct-body { display:none; }
+  .acct-name { flex:1; font-weight:600; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .char { display:flex; align-items:center; gap:8px; padding:8px 12px; }
+  .char + .char { border-top:1px solid #3a3226; }
+  .char-name { flex:1; }
+  .badge { font-size:12px; color:var(--green); }
+  .muted { color:var(--muted); }
+  .dragging { opacity:.4; }
+  .drop-before { box-shadow:0 -2px 0 var(--gold); }
+  .drop-after { box-shadow:0 2px 0 var(--gold); }
+  .grip { color:var(--muted); cursor:grab; padding:0 4px; font-size:15px; line-height:1; user-select:none; }
+  .grip:hover { color:var(--gold); }
+  .grip:active { cursor:grabbing; }
+  button.eye { padding:4px 8px; background:transparent; }
+  .eye-ico { display:inline-block; line-height:0; vertical-align:middle; }
+  .eye-ico.off svg { opacity:.7; }
+  .char.is-hidden .char-name, .char.is-hidden .member { opacity:.45; }
+  #update { margin:10px 18px 0; padding:8px 12px; border:1px solid var(--gold); border-radius:8px; background:var(--panel); display:flex; align-items:center; gap:10px; }
+  #update[hidden] { display:none; }
+  #update span { flex:1; }
+  footer { padding:0 18px 16px; color:var(--muted); font-size:12px; display:flex; align-items:center; gap:10px; }
+  footer button { padding:3px 10px; font-size:12px; }
+  .small { font-size:12px; }
+  .member { font-size:12px; color:var(--gold); }
+  .empty { text-align:center; padding:40px 10px; color:var(--muted); }
+  #status { min-height:20px; padding:0 18px 8px; font-size:13px; }
+  #status.err { color:var(--red); }
+  details { margin-top:18px; color:var(--muted); }
+  details .row { display:flex; gap:8px; align-items:center; margin:8px 0; }
+  details code { flex:1; font-size:12px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; color:var(--text); }
+  select { background:var(--panel); color:var(--text); border:1px solid var(--line); border-radius:6px; padding:5px 8px; font:inherit; }
+</style>
+</head>
+<body>
+<header>
+  <h1>MultiJag &middot; OSRS</h1>
+  <select id="client" title="Game client">
+    <option value="runelite">RuneLite</option>
+    <option value="official">Official client</option>
+  </select>
+  <button class="primary" id="add">+ Add Jagex account</button>
+</header>
+<div id="update" hidden></div>
+<div id="status"></div>
+<main>
+  <div id="accounts"></div>
+  <details>
+    <summary>Client paths</summary>
+    <div class="row">RuneLite <code id="path-runelite"></code><button data-browse="runelite">Change</button></div>
+    <div class="row">Official <code id="path-official"></code><button data-browse="official">Change</button></div>
+  </details>
+</main>
+<footer><span id="version"></span><button id="check-update">Check for updates</button></footer>
+<script src="api.js"></script>
+<script src="ui.js"></script>
+</body>
+</html>

@@ -234,7 +234,7 @@ async function checkForUpdate(manual) {
     banner.hidden = !u.available;
     if (u.available) {
       const open = el('button', { class: 'primary' }, 'Download');
-      open.addEventListener('click', () => run('', () => api.openRelease(u.url)));
+      open.addEventListener('click', () => run('', () => api.openLink(u.url)));
       banner.append(el('span', {}, `Update available: ${u.latest} (you have v${u.current})`), open);
     } else if (manual) {
       setStatus(`You're up to date (v${u.current}).`);
@@ -247,5 +247,54 @@ $('#check-update').addEventListener('click', (e) => {
   e.currentTarget.disabled = true;
   checkForUpdate(true).finally(() => { e.currentTarget.disabled = false; });
 });
-$('#feedback').addEventListener('click', () => run('', () => api.openRelease('https://github.com/Skeldoor/multijag/issues')));
+// Any element with data-link opens that URL in the system browser (never in this window).
+document.addEventListener('click', (e) => {
+  const link = e.target.closest('[data-link]');
+  if (!link) return;
+  e.preventDefault();
+  run('', () => api.openLink(link.dataset.link));
+});
+$('#feedback').addEventListener('click', () => run('', () => api.openLink('https://github.com/skeldoor/multijag/issues')));
 checkForUpdate(false);
+
+// ---- instant styled tooltips for anything with a title ----
+// Native title tooltips are slow and easy to miss, so title is moved to data-tip (and
+// aria-label for screen readers) the first time the pointer reaches an element.
+(() => {
+  const tip = $('#tip');
+  let timer = null;
+  let target = null;
+  const hide = () => {
+    clearTimeout(timer);
+    target = null;
+    tip.classList.remove('show');
+  };
+  const place = (el) => {
+    tip.textContent = el.dataset.tip;
+    const r = el.getBoundingClientRect();
+    const t = tip.getBoundingClientRect();
+    const x = Math.min(Math.max(8, r.left + r.width / 2 - t.width / 2), window.innerWidth - t.width - 8);
+    let y = r.top - t.height - 8;
+    if (y < 8) y = r.bottom + 8;
+    tip.style.transform = `translate(${Math.round(x)}px, ${Math.round(y)}px)`;
+    tip.classList.add('show');
+  };
+  document.addEventListener('mouseover', (e) => {
+    const el = e.target.closest('[title], [data-tip]');
+    if (el === target) return;
+    hide();
+    if (!el) return;
+    if (el.hasAttribute('title')) {
+      el.dataset.tip = el.getAttribute('title');
+      if (!el.hasAttribute('aria-label')) el.setAttribute('aria-label', el.dataset.tip);
+      el.removeAttribute('title');
+    }
+    target = el;
+    timer = setTimeout(() => place(el), 120);
+  });
+  document.addEventListener('mouseout', (e) => {
+    if (target && !target.contains(e.relatedTarget)) hide();
+  });
+  for (const ev of ['mousedown', 'dragstart', 'scroll', 'keydown']) document.addEventListener(ev, hide, true);
+  window.addEventListener('blur', hide);
+})();

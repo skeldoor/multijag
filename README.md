@@ -31,7 +31,7 @@ Pushing a `v*` tag (or running the workflow by hand) builds all three platforms 
 Settings and encrypted tokens are in the app data folder (`%APPDATA%\local.multijag`,
 `~/Library/Application Support/local.multijag`, `~/.local/share/local.multijag`). Tokens are
 AES-256-GCM encrypted with a key held in the OS keychain (a 0600 key file is the fallback when
-there is no keychain). Accounts added with the old Electron version must be added again.
+there is no keychain). 
 
 ## How it works
 
@@ -45,3 +45,7 @@ there is no keychain). Accounts added with the old Electron version must be adde
    `GET …/v1/accounts` returns the characters.
 
 Before each launch the session is checked and rebuilt from the refresh token if it has expired.
+
+## Trademarks
+
+The Jagex logo in the footer is Jagex's trademark, used only as a link to Jagex Account Management. MultiJag is an unofficial community tool and isn't affiliated with or endorsed by Jagex. RuneLite is a third-party client; see the [Jagex EULA](https://legal.jagex.com/docs/terms/eula#id-5.-other-third-party-services-integration-and-third-party-software-acknowledgments).

@@ -344,9 +344,16 @@ async fn check_update() -> Result<UpdateInfo, String> {
 }
 
 #[tauri::command]
-fn open_release(app: AppHandle, url: String) -> Result<(), String> {
+fn open_link(app: AppHandle, url: String) -> Result<(), String> {
     use tauri_plugin_opener::OpenerExt;
-    if !url.starts_with(&format!("https://github.com/{REPO}/")) {
+    // Only ever open our own repo and Jagex's account / legal pages.
+    let allowed = [
+        format!("https://github.com/{REPO}/"),
+        "https://account.jagex.com/".to_string(),
+        "https://legal.jagex.com/".to_string(),
+    ];
+    let lower = url.to_ascii_lowercase();
+    if !allowed.iter().any(|p| lower.starts_with(&p.to_ascii_lowercase())) {
         return Err("Refusing to open an unexpected link".into());
     }
     app.opener().open_url(url, None::<&str>).map_err(|e| e.to_string())
@@ -429,7 +436,7 @@ fn main() {
             reorder_characters,
             set_hidden,
             check_update,
-            open_release,
+            open_link,
             set_client,
             browse_client
         ])

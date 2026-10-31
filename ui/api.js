@@ -14,7 +14,7 @@ window.api = {
   reorderCharacters: (id, ids) => call('reorder_characters', { id, ids }),
   setHidden: (id, characterId, hidden) => call('set_hidden', { id, characterId, hidden }),
   checkUpdate: () => call('check_update'),
-  openRelease: (url) => call('open_release', { url }),
+  openLink: (url) => call('open_link', { url }),
   setClient: (client) => call('set_client', { client }),
   browseClient: (client) => call('browse_client', { client }),
   onState: (fn) => listen('state', (e) => fn(e.payload)),
